@@ -40,9 +40,15 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     /*
-        updateUI() sets up UI and will create a CrimeAdapter and set it on the RecyclerView.
-     */
+            updateUI() sets up UI and will create a CrimeAdapter and set it on the RecyclerView.
+         */
     private void updateUI() {
         // use singleton to create an instance of crimeLab
         // assign the data to a local variable
@@ -51,8 +57,12 @@ public class CrimeListFragment extends Fragment {
 
         // get the data with the parameter and let the adapter know what kind of data it is
         // create a connection between RecyclerView and Adapter
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 
