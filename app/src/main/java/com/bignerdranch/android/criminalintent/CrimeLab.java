@@ -31,6 +31,7 @@ public class CrimeLab {
 
     // get() method should be static
     // to be called in any other classes without an instance
+    // context is the activity calling this method to use the constructor
     public static CrimeLab get(Context context) {
         // call the constructor to create an instance if it does'nt exist yet
         if (sCrimeLab == null) {

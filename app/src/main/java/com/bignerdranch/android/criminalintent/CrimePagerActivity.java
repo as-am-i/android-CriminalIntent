@@ -35,7 +35,10 @@ public class CrimePagerActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.crime_view_pager);
 
         mCrimes = CrimeLab.get(this).getCrimes();
+        // whenever we need to handle a fragment, we need to use fragmentManger
+        // getSupportFragmentManeger() came from support library. that's why getSupport...
         FragmentManager fragmentManager = getSupportFragmentManager();
+        // an instance of FragmentStatePagerAdapter should be an Adapter for mViewPager
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 
             @Override
@@ -49,5 +52,12 @@ public class CrimePagerActivity extends AppCompatActivity {
                 return mCrimes.size();
             }
         });
+
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getID().equals(crimeId)) {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
     }
 }
