@@ -109,6 +109,7 @@ public class CrimeFragment extends Fragment {
             return;
         }
 
+        // When the Requestcode is the same as the constant, it means this is the right fragment
         if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);

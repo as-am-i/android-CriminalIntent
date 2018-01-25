@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class CrimeLab {
     // why static?
-    // because only static innstace can be acceessed in static method
+    // because only static instance can be accessed in static method
     private static CrimeLab sCrimeLab;
 
     private List<Crime> mCrimes;
@@ -21,12 +21,6 @@ public class CrimeLab {
     private CrimeLab(Context context) {
         // mCrimes holds an ArrayList
         mCrimes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Crime crime = new Crime();
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i % 2 == 0); // Every other one
-            mCrimes.add(crime);
-        }
     }
 
     // get() method should be static
@@ -39,6 +33,10 @@ public class CrimeLab {
         }
         // simply returns the instance if it already exists
         return sCrimeLab;
+    }
+
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
     }
 
     public List<Crime> getCrimes() {

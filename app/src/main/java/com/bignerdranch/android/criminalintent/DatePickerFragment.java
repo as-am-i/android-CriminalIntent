@@ -71,6 +71,9 @@ public class DatePickerFragment extends DialogFragment {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DATE, date);
 
+        // TargetFragment is the destination
+        // RequestCode is used to identify which fragment is giving the data to the destination, so it must be always the same code
+        // resultCode is used to check if the user press OK button or cancel one.
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 }
