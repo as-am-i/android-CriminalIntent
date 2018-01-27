@@ -2,9 +2,11 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
+import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
 import com.bignerdranch.android.criminalintent.database.CrimeDbSchema;
 
 import java.util.ArrayList;
@@ -55,11 +57,44 @@ public class CrimeLab {
     }
 
     public List<Crime> getCrimes() {
-        return new ArrayList<>();
+        // create a local List to hold the instance with the information from the DB
+        List<Crime> crimes = new ArrayList<>();
+
+        // cursor has his finger on a particular placa in a query
+        // cursor is pointing at the result of the query
+        CrimeCursorWrapper cursor = queryCrimes(null,null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                crimes.add(cursor.getCrime());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return crimes;
+
     }
 
     public Crime getCrime(UUID id) {
-        return null;
+        CrimeCursorWrapper cursor = queryCrimes(
+                CrimeTable.Cols.UUID + " = ?", new String[] {
+                         id.toString()
+                }
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+            return cursor.getCrime();
+        } finally {
+            cursor.close();
+        }
     }
 
     public void updateCrime(Crime crime) {
@@ -67,6 +102,20 @@ public class CrimeLab {
         ContentValues values = getContentValues(crime);
 
         mDatabase.update(CrimeTable.NAME, values, CrimeTable.Cols.UUID + " = ?", new String[] { uuidString });
+    }
+
+    // To call .query to assign the result to cursor
+    private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                CrimeTable.NAME,
+                null, // colums - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, //having
+                null // orderBy
+        );
+        return new CrimeCursorWrapper(cursor);
     }
 
     private static ContentValues getContentValues(Crime crime) {
